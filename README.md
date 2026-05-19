@@ -62,19 +62,125 @@ Round JSON shape:
 }
 ```
 
-Minimal example `my-solver.mjs`:
+The runner timeout for solver is 120 seconds per round.
+
+If `SOLVER_COMMAND` is empty, the runner watches but does not commit.
+
+### Example 1 — Minimal regex (no AI)
+
+Current phrase bank exposes the answer in the question text. Easiest solver:
 
 ```js
-process.stdin.on("data", (data) => {
-  const round = JSON.parse(data.toString());
+// my-solver.mjs
+let buf = "";
+process.stdin.on("data", (chunk) => (buf += chunk));
+process.stdin.on("end", () => {
+  const round = JSON.parse(buf);
   const match = round.question.match(/"([^"]+)"/);
   process.stdout.write(match ? match[1] : "");
 });
 ```
 
-The runner timeout for solver is 120 seconds per round.
+```env
+SOLVER_COMMAND=node ./my-solver.mjs
+```
 
-If `SOLVER_COMMAND` is empty, the runner watches but does not commit.
+### Example 2 — OpenAI (GPT-4o-mini)
+
+`npm install openai` first.
+
+```js
+// solver-openai.mjs
+import OpenAI from "openai";
+
+const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+let buf = "";
+process.stdin.on("data", (chunk) => (buf += chunk));
+process.stdin.on("end", async () => {
+  const round = JSON.parse(buf);
+  const completion = await client.chat.completions.create({
+    model: "gpt-4o-mini",
+    messages: [
+      { role: "system", content: "You extract the target phrase the player must produce. Output ONLY the phrase, no quotes, no explanation." },
+      { role: "user", content: round.question },
+    ],
+    temperature: 0,
+    max_tokens: 30,
+  });
+  process.stdout.write(completion.choices[0].message.content.trim());
+});
+```
+
+```env
+SOLVER_COMMAND=node ./solver-openai.mjs
+OPENAI_API_KEY=sk-...
+```
+
+### Example 3 — Anthropic (Claude Haiku)
+
+`npm install @anthropic-ai/sdk` first.
+
+```js
+// solver-claude.mjs
+import Anthropic from "@anthropic-ai/sdk";
+
+const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+let buf = "";
+process.stdin.on("data", (chunk) => (buf += chunk));
+process.stdin.on("end", async () => {
+  const round = JSON.parse(buf);
+  const message = await client.messages.create({
+    model: "claude-haiku-4-5-20251001",
+    max_tokens: 30,
+    system: "Extract the target phrase the player must produce. Output ONLY the phrase, no quotes, no commentary.",
+    messages: [{ role: "user", content: round.question }],
+  });
+  const text = message.content[0].type === "text" ? message.content[0].text : "";
+  process.stdout.write(text.trim());
+});
+```
+
+```env
+SOLVER_COMMAND=node ./solver-claude.mjs
+ANTHROPIC_API_KEY=sk-ant-...
+```
+
+### Example 4 — Local LLM via Ollama
+
+Install [Ollama](https://ollama.com) + pull a model: `ollama pull llama3.2`.
+
+```js
+// solver-ollama.mjs
+let buf = "";
+process.stdin.on("data", (chunk) => (buf += chunk));
+process.stdin.on("end", async () => {
+  const round = JSON.parse(buf);
+  const response = await fetch("http://localhost:11434/api/generate", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      model: "llama3.2",
+      prompt: `Extract the target phrase from this challenge. Output ONLY the phrase.\n\n${round.question}`,
+      stream: false,
+      options: { temperature: 0, num_predict: 30 },
+    }),
+  });
+  const { response: text } = await response.json();
+  process.stdout.write(text.trim());
+});
+```
+
+```env
+SOLVER_COMMAND=node ./solver-ollama.mjs
+```
+
+Free, runs locally, no API costs.
+
+### Picking a solver
+
+- **Regex** — fastest, free, works as long as challenge format stays the same
+- **OpenAI / Anthropic** — costs per round (~$0.0001), robust if challenge format changes
+- **Ollama** — free, slower (depends on GPU), full local privacy
 
 ## How it works
 
