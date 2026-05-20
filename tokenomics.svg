@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#070604"/>
+      <stop offset="100%" stop-color="#0a1108"/>
+    </linearGradient>
+  </defs>
+  <rect width="1280" height="720" fill="url(#bg)"/>
+
+  <!-- Left: title, tagline, allocation list -->
+  <g transform="translate(70,90)">
+    <text font-size="64" font-weight="900" fill="#ead8bb" font-style="italic" letter-spacing="-3">
+      <tspan x="0" y="0">AGENTS.</tspan>
+      <tspan x="0" y="72">RARITY.</tspan>
+      <tspan x="0" y="144" fill="#df8251">ON-CHAIN.</tspan>
+    </text>
+
+    <text font-size="18" fill="#bd6738" y="200" letter-spacing="2">— $CODEX TOKENOMICS</text>
+
+    <text font-size="18" fill="#ead8bb" y="248">Hold the NFT.</text>
+    <text font-size="18" fill="#ead8bb" y="272">Earn the token.</text>
+    <text font-size="18" fill="#ead8bb" y="296">Run the agent.</text>
+    <text font-size="18" fill="#827363" y="324">Built by agents. Owned by holders.</text>
+
+    <!-- Allocation list -->
+    <g transform="translate(0,380)">
+      <rect width="500" height="220" fill="none" stroke="#1f2d18" stroke-width="1"/>
+      <text font-size="13" fill="#bd6738" x="20" y="32" letter-spacing="3">TOKEN ALLOCATION</text>
+
+      <g transform="translate(20,60)" font-size="16">
+        <circle cx="8" cy="8" r="6" fill="#df8251"/>
+        <text x="28" y="13" fill="#ead8bb">HOLDERS AIRDROP</text>
+        <text x="460" y="13" fill="#df8251" text-anchor="end" font-weight="700">40%</text>
+
+        <circle cx="8" cy="48" r="6" fill="#5e8b3a"/>
+        <text x="28" y="53" fill="#ead8bb">LIQUIDITY (LP)</text>
+        <text x="460" y="53" fill="#5e8b3a" text-anchor="end" font-weight="700">55%</text>
+
+        <circle cx="8" cy="88" r="6" fill="#b48cff"/>
+        <text x="28" y="93" fill="#ead8bb">VAULT (LOCKED 30d)</text>
+        <text x="460" y="93" fill="#b48cff" text-anchor="end" font-weight="700">5%</text>
+
+        <line x1="0" y1="120" x2="460" y2="120" stroke="#1f2d18"/>
+
+        <text x="0" y="145" font-size="13" fill="#827363">TOTAL SUPPLY</text>
+        <text x="460" y="145" font-size="13" fill="#ead8bb" text-anchor="end">100,000,000,000</text>
+      </g>
+    </g>
+  </g>
+
+  <!-- Right: donut chart -->
+  <g transform="translate(890,360)">
+    <!-- Background ring -->
+    <circle cx="0" cy="0" r="200" fill="none" stroke="#1f2d18" stroke-width="2" stroke-dasharray="2 4"/>
+    <circle cx="0" cy="0" r="140" fill="none" stroke="#1f2d18" stroke-width="2" stroke-dasharray="2 4"/>
+
+    <!-- Donut segments (using stroke trick on r=170, stroke-width=60). Circumference = 2π*170 ≈ 1068.14 -->
+    <g transform="rotate(-90)" fill="none" stroke-width="60">
+      <!-- Holders 40% — orange, length 427.26 -->
+      <circle cx="0" cy="0" r="170" stroke="#df8251" stroke-dasharray="427.26 1068.14" stroke-dashoffset="0"/>
+      <!-- Liquidity 55% — green, length 587.48, offset -427.26 -->
+      <circle cx="0" cy="0" r="170" stroke="#5e8b3a" stroke-dasharray="587.48 1068.14" stroke-dashoffset="-427.26"/>
+      <!-- Vault 5% — purple, length 53.4, offset -1014.74 -->
+      <circle cx="0" cy="0" r="170" stroke="#b48cff" stroke-dasharray="53.4 1068.14" stroke-dashoffset="-1014.74"/>
+    </g>
+
+    <!-- Center label -->
+    <text text-anchor="middle" y="-10" font-size="14" fill="#827363" letter-spacing="3">$CODEX</text>
+    <text text-anchor="middle" y="20" font-size="28" fill="#ead8bb" font-weight="900" font-style="italic">100B</text>
+    <text text-anchor="middle" y="44" font-size="12" fill="#827363">SUPPLY ON BASE</text>
+
+    <!-- Segment labels with lines -->
+    <!-- Holders 40% (center angle ≈ 72° from top, i.e. 20% rotation from top) -->
+    <g font-size="14" fill="#df8251">
+      <line x1="160" y1="-90" x2="220" y2="-130" stroke="#df8251" stroke-width="1"/>
+      <text x="225" y="-130" font-weight="700">HOLDERS</text>
+      <text x="225" y="-112" font-size="20" font-weight="900">40%</text>
+    </g>
+    <!-- Liquidity 55% (center 247.5° from top, lower-left) -->
+    <g font-size="14" fill="#5e8b3a">
+      <line x1="-140" y1="100" x2="-200" y2="140" stroke="#5e8b3a" stroke-width="1"/>
+      <text x="-205" y="140" font-weight="700" text-anchor="end">LIQUIDITY</text>
+      <text x="-205" y="160" font-size="20" font-weight="900" text-anchor="end">55%</text>
+    </g>
+    <!-- Vault 5% (center 342° from top, upper-left) -->
+    <g font-size="14" fill="#b48cff">
+      <line x1="-50" y1="-160" x2="-100" y2="-200" stroke="#b48cff" stroke-width="1"/>
+      <text x="-105" y="-200" font-weight="700" text-anchor="end">VAULT</text>
+      <text x="-105" y="-182" font-size="20" font-weight="900" text-anchor="end">5%</text>
+    </g>
+  </g>
+
+  <!-- Footer -->
+  <text x="640" y="690" font-size="12" fill="#827363" text-anchor="middle" letter-spacing="2">CODEXSECRET.CODES · BASE MAINNET · CLANKER.WORLD</text>
+</svg>

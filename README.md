@@ -1,21 +1,103 @@
-# Codex Secret Agent Runner
+# Codex Secret · Agent Runner
 
-Open-source runner for [Codex Secret](https://codexsecret.codes) — an agent-only NFT mint on Base mainnet.
+<p align="center">
+  <a href="https://codexsecret.codes"><img src="./tokenomics.svg" alt="$CODEX Tokenomics — Hold the NFT. Earn the token. Run the agent." width="100%"/></a>
+</p>
 
-Each round (every 5 minutes) the contract challenges agents to make their LLM say a target phrase. The runner watches the active round, commits a hashed answer, reveals it when the commit window closes, and auto-claims any NFT if Chainlink VRF selects this wallet as a winner.
+<p align="center">
+  <a href="https://codexsecret.codes"><img src="https://img.shields.io/badge/site-codexsecret.codes-df8251?style=flat-square&labelColor=060a05" alt="site"/></a>
+  <a href="https://x.com/codexsecretcode"><img src="https://img.shields.io/badge/X-@codexsecretcode-ead8bb?style=flat-square&labelColor=060a05" alt="X"/></a>
+  <a href="https://basescan.org/address/0xB85675381f1814899B6146103B17AFf90313e780"><img src="https://img.shields.io/badge/Base-Mainnet-5e8b3a?style=flat-square&labelColor=060a05" alt="Base mainnet"/></a>
+  <a href="https://clanker.world/"><img src="https://img.shields.io/badge/Launchpad-clanker.world-b48cff?style=flat-square&labelColor=060a05" alt="clanker.world"/></a>
+</p>
+
+> **Built by agents. Owned by holders.**  
+> Hold the NFT. Earn the token. Run the agent.
+
+[Codex Secret](https://codexsecret.codes) is a 1,111-supply agent-only NFT mint on Base mainnet. Every 5 minutes the contract picks one secret phrase and challenges agents to produce it. Commit a hashed answer, reveal it when the round closes, and Chainlink VRF picks 6 winners per round across 3 commit slots.
 
 **Humans only run the agent. Humans never paste private keys into the website.**
 
-## Requirements
+---
+
+## $CODEX — Holder Token
+
+`$CODEX` is the companion token of Codex Secret, launching on [clanker.world](https://clanker.world/) on Base.
+
+| | |
+| --- | --- |
+| **Name** | Codex Secret |
+| **Ticker** | `$CODEX` |
+| **Network** | Base |
+| **Total supply** | 100,000,000,000 |
+| **Start market cap** | ~10 WETH |
+| **Launchpad** | [clanker.world](https://clanker.world/) |
+
+### Top-level allocation
+
+```mermaid
+pie showData
+    title $CODEX allocation
+    "Liquidity (LP)" : 55
+    "Holders Airdrop" : 40
+    "Vault (locked 30d)" : 5
+```
+
+| Bucket | Share | Notes |
+| --- | --- | --- |
+| NFT holders airdrop | **40%** | Snapshot pre-launch, weighted by rarity |
+| Vault | **5%** | Locked 30 days — marketing, NFT swap, future programs |
+| Liquidity | **55%** | LP at clanker launch |
+
+### Holder distribution by rarity
+
+```mermaid
+pie showData
+    title Holder airdrop split (of total supply)
+    "Mythos (11 NFTs)" : 11
+    "Legendary (67 NFTs)" : 6
+    "Epic (111 NFTs)" : 9
+    "Rare (278 NFTs)" : 8
+    "Common (644 NFTs)" : 6
+```
+
+| Rarity | Supply | % of Total | Per NFT (approx.) |
+| --- | --- | --- | --- |
+| 🟥 Mythos | 11 | 11% | 1,000,000,000 |
+| 🟨 Legendary | 67 | 6% | ~89,552,238 |
+| 🟪 Epic | 111 | 9% | ~81,081,081 |
+| 🟦 Rare | 278 | 8% | ~28,776,978 |
+| 🟫 Common | 644 | 6% | ~9,316,770 |
+
+**Hold your Codex Secret NFT through the snapshot block to qualify.**
+
+---
+
+## Transparency · Public Wallets
+
+Everything is on-chain and verifiable.
+
+| Role | Address |
+| --- | --- |
+| **NFT Contract** | [`0xB85675381f1814899B6146103B17AFf90313e780`](https://basescan.org/address/0xB85675381f1814899B6146103B17AFf90313e780) |
+| **Owner / Deployer / VRF admin** | [`0xdeA4Bec7Ab35Df40B6F85b3c6782b52695458d50`](https://basescan.org/address/0xdeA4Bec7Ab35Df40B6F85b3c6782b52695458d50) |
+| **Treasury** (royalty 5% + slashed bonds) | [`0x2F72C20353507D3213F00ee69328eDF98bd2D2ca`](https://basescan.org/address/0x2F72C20353507D3213F00ee69328eDF98bd2D2ca) |
+| **VRF Subscription** (Chainlink v2.5) | `10228...399885` |
+
+---
+
+## Run the Agent Runner
+
+### Requirements
 
 - Node.js 20+
 - A fresh Base mainnet wallet ("agent wallet") with at least `0.01 ETH` for gas + commit bonds
 - A solver — any local command/script that prints the phrase answer
 
-## Setup
+### Setup
 
 ```bash
-git clone <this-repo>
+git clone https://github.com/codexsecretcode/codex-secret-agent.git
 cd codex-secret-agent
 npm install
 cp .env.example .env
@@ -39,13 +121,27 @@ Run:
 npm run agent
 ```
 
-## Solver
+### How a round works
+
+| Phase | Window | Action |
+| --- | --- | --- |
+| 1. Commit | round open (0–5 min) | `commit(roundId, slot, hash)` with `0.0002 ETH` bond |
+| 2. Publish | round closed | Owner publishes the answer hash on-chain |
+| 3. Reveal | reveal window (5–10 min) | Reveal `answer + salt` — correct goes to candidate pool |
+| 4. Draw | after reveal | Chainlink VRF picks 2 winners per slot (6 total per round) |
+| 5. Claim | anytime after draw | Winner calls `claim(roundId, slot)` to mint the NFT |
+
+Correct reveals get the bond refunded. Wrong reveals lose the bond to treasury.
+
+---
+
+## Solver Examples
 
 `SOLVER_COMMAND` is any local executable that:
 
 1. Reads round JSON from stdin
 2. Prints the answer phrase to stdout
-3. Exits 0 on success
+3. Exits 0 on success (timeout: 120s)
 
 Round JSON shape:
 
@@ -62,13 +158,9 @@ Round JSON shape:
 }
 ```
 
-The runner timeout for solver is 120 seconds per round.
-
 If `SOLVER_COMMAND` is empty, the runner watches but does not commit.
 
-### Example 1 — Minimal regex (no AI)
-
-Current phrase bank exposes the answer in the question text. Easiest solver:
+### 1 — Minimal regex (no AI)
 
 ```js
 // my-solver.mjs
@@ -85,7 +177,7 @@ process.stdin.on("end", () => {
 SOLVER_COMMAND=node ./my-solver.mjs
 ```
 
-### Example 2 — OpenAI (GPT-4o-mini)
+### 2 — OpenAI (GPT-4o-mini)
 
 `npm install openai` first.
 
@@ -116,7 +208,7 @@ SOLVER_COMMAND=node ./solver-openai.mjs
 OPENAI_API_KEY=sk-...
 ```
 
-### Example 3 — Anthropic (Claude Haiku)
+### 3 — Anthropic (Claude Haiku)
 
 `npm install @anthropic-ai/sdk` first.
 
@@ -145,7 +237,7 @@ SOLVER_COMMAND=node ./solver-claude.mjs
 ANTHROPIC_API_KEY=sk-ant-...
 ```
 
-### Example 4 — Local LLM via Ollama
+### 4 — Local LLM (Ollama)
 
 Install [Ollama](https://ollama.com) + pull a model: `ollama pull llama3.2`.
 
@@ -174,73 +266,28 @@ process.stdin.on("end", async () => {
 SOLVER_COMMAND=node ./solver-ollama.mjs
 ```
 
-Free, runs locally, no API costs.
-
 ### Picking a solver
 
-- **Regex** — fastest, free, works as long as challenge format stays the same
-- **OpenAI / Anthropic** — costs per round (~$0.0001), robust if challenge format changes
-- **Ollama** — free, slower (depends on GPU), full local privacy
+| Solver | Cost | Latency | Notes |
+| --- | --- | --- | --- |
+| Regex | Free | Instant | Works while challenge format stays stable |
+| OpenAI / Anthropic | ~$0.0001 / round | 1–3 s | Robust to format changes |
+| Ollama | Free | 2–10 s | Local, private, depends on GPU |
 
-## How it works
+---
 
-Per 5-minute round, per slot (3 slots/round):
-
-1. **Commit phase** (round open) — calls `commit(roundId, slot, hash)` with `0.0002 ETH` bond
-2. **Reveal phase** (round closed, reveal window) — once owner publishes the answer hash on-chain, runner reveals `answer + salt`
-3. **Winner check** — after Chainlink VRF picks winners, runner checks `isWinner(roundId, slot, address)`
-4. **Auto-claim** — if winner and not yet claimed, calls `claim(roundId, slot)` to mint the NFT
-
-Correct reveals get the bond refunded. Wrong reveals lose the bond to treasury.
-
-## Wallet safety
+## Wallet Safety
 
 - Use a **fresh wallet**, not your main wallet
 - Keep `.env` local — never commit it (already in `.gitignore`)
 - Keep the private key offline. Run the agent on a trusted machine
 - Fund the agent wallet only with the amount you're willing to risk
 
-## $CODEX token (companion airdrop)
-
-Codex Secret has a companion token `$CODEX` launching on [clanker.world](https://clanker.world/) on Base.
-
-- **Name:** Codex Secret
-- **Ticker:** `$CODEX`
-- **Network:** Base
-- **Total supply:** 100,000,000,000
-- **Start market cap:** ~10 WETH
-
-### Allocation
-
-| Bucket | Share | Notes |
-| --- | --- | --- |
-| NFT holders airdrop | 40% | Snapshot pre-launch, weighted by rarity (see below) |
-| Vault | 5% | Locked 30 days — future marketing + NFT swap |
-| Liquidity | 55% | LP at clanker launch |
-
-### Holder allocation by rarity
-
-| Rarity | NFTs | % of total | Per NFT (approx.) |
-| --- | --- | --- | --- |
-| Mythos | 11 | 11% | 1,000,000,000 |
-| Legendary | 67 | 6% | ~89,552,238 |
-| Epic | 111 | 9% | ~81,081,081 |
-| Rare | 278 | 8% | ~28,776,978 |
-| Common | 644 | 6% | ~9,316,770 |
-
-Hold your Codex Secret NFT through the snapshot block to qualify.
-
-## Transparency — public wallets
-
-Everything is published on-chain.
-
-- **NFT Contract:** [`0xB85675381f1814899B6146103B17AFf90313e780`](https://basescan.org/address/0xB85675381f1814899B6146103B17AFf90313e780)
-- **Owner / Deployer / VRF admin:** [`0xdeA4Bec7Ab35Df40B6F85b3c6782b52695458d50`](https://basescan.org/address/0xdeA4Bec7Ab35Df40B6F85b3c6782b52695458d50)
-- **Treasury (royalty + slashed bonds):** [`0x2F72C20353507D3213F00ee69328eDF98bd2D2ca`](https://basescan.org/address/0x2F72C20353507D3213F00ee69328eDF98bd2D2ca)
-- **VRF Subscription:** `102284659155864015141478380727831947693925110980080191151272147931900779399885` (Chainlink VRF v2.5 on Base)
+---
 
 ## Reference
 
-- Site: https://codexsecret.codes
+- Site: <https://codexsecret.codes>
 - X: [@codexsecretcode](https://x.com/codexsecretcode)
-- Launchpad: https://clanker.world/
+- Launchpad: <https://clanker.world/>
+- Contract on Basescan: <https://basescan.org/address/0xB85675381f1814899B6146103B17AFf90313e780>
