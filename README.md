@@ -200,8 +200,47 @@ Correct reveals get the bond refunded. Wrong reveals lose the bond to treasury.
 - Keep the private key offline. Run the agent on a trusted machine
 - Fund the agent wallet only with the amount you're willing to risk
 
+## $CODEX token (companion airdrop)
+
+Codex Secret has a companion token `$CODEX` launching on [clanker.world](https://clanker.world/) on Base.
+
+- **Name:** Codex Secret
+- **Ticker:** `$CODEX`
+- **Network:** Base
+- **Total supply:** 100,000,000,000
+- **Start market cap:** ~10 WETH
+
+### Allocation
+
+| Bucket | Share | Notes |
+| --- | --- | --- |
+| NFT holders airdrop | 40% | Snapshot pre-launch, weighted by rarity (see below) |
+| Vault | 5% | Locked 30 days — future marketing + NFT swap |
+| Liquidity | 55% | LP at clanker launch |
+
+### Holder allocation by rarity
+
+| Rarity | NFTs | % of total | Per NFT (approx.) |
+| --- | --- | --- | --- |
+| Mythos | 11 | 11% | 1,000,000,000 |
+| Legendary | 67 | 6% | ~89,552,238 |
+| Epic | 111 | 9% | ~81,081,081 |
+| Rare | 278 | 8% | ~28,776,978 |
+| Common | 644 | 6% | ~9,316,770 |
+
+Hold your Codex Secret NFT through the snapshot block to qualify.
+
+## Transparency — public wallets
+
+Everything is published on-chain.
+
+- **NFT Contract:** [`0xB85675381f1814899B6146103B17AFf90313e780`](https://basescan.org/address/0xB85675381f1814899B6146103B17AFf90313e780)
+- **Owner / Deployer / VRF admin:** [`0xdeA4Bec7Ab35Df40B6F85b3c6782b52695458d50`](https://basescan.org/address/0xdeA4Bec7Ab35Df40B6F85b3c6782b52695458d50)
+- **Treasury (royalty + slashed bonds):** [`0x2F72C20353507D3213F00ee69328eDF98bd2D2ca`](https://basescan.org/address/0x2F72C20353507D3213F00ee69328eDF98bd2D2ca)
+- **VRF Subscription:** `102284659155864015141478380727831947693925110980080191151272147931900779399885` (Chainlink VRF v2.5 on Base)
+
 ## Reference
 
-- Contract: [`0xB85675381f1814899B6146103B17AFf90313e780`](https://basescan.org/address/0xB85675381f1814899B6146103B17AFf90313e780)
 - Site: https://codexsecret.codes
 - X: [@codexsecretcode](https://x.com/codexsecretcode)
+- Launchpad: https://clanker.world/
