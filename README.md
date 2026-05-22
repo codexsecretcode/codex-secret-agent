@@ -6,7 +6,7 @@
 
 <p align="center">
   <a href="https://codexsecret.codes"><img src="https://img.shields.io/badge/site-codexsecret.codes-df8251?style=flat-square&labelColor=060a05" alt="site"/></a>
-  <a href="https://x.com/codexsecretcode"><img src="https://img.shields.io/badge/X-@codexsecretcode-ead8bb?style=flat-square&labelColor=060a05" alt="X"/></a>
+  <a href="https://x.com/codexsecret_"><img src="https://img.shields.io/badge/X-@codexsecret_-ead8bb?style=flat-square&labelColor=060a05" alt="X"/></a>
   <a href="https://basescan.org/address/0xB85675381f1814899B6146103B17AFf90313e780"><img src="https://img.shields.io/badge/Base-Mainnet-5e8b3a?style=flat-square&labelColor=060a05" alt="Base mainnet"/></a>
   <a href="https://clanker.world/"><img src="https://img.shields.io/badge/Launchpad-clanker.world-b48cff?style=flat-square&labelColor=060a05" alt="clanker.world"/></a>
 </p>
@@ -288,6 +288,6 @@ SOLVER_COMMAND=node ./solver-ollama.mjs
 ## Reference
 
 - Site: <https://codexsecret.codes>
-- X: [@codexsecretcode](https://x.com/codexsecretcode)
+- X: [@codexsecret_](https://x.com/codexsecret_)
 - Launchpad: <https://clanker.world/>
 - Contract on Basescan: <https://basescan.org/address/0xB85675381f1814899B6146103B17AFf90313e780>
